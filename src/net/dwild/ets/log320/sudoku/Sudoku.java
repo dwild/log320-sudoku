@@ -96,17 +96,12 @@ public class Sudoku implements Cloneable {
 
     @Override
     public String toString() {
-        String r = "Sudoku [";
+        String r = "Solution:\n";
 
         for(int[] sudokuLine:sudoku) {
-            r += Arrays.toString(sudokuLine) + ", ";
+            r += Arrays.toString(sudokuLine) + "\n";
         }
 
-        if(r.endsWith(", ")) {
-            r = r.substring(0, r.length() - 2);
-        }
-
-        r += "]";
         return r;
     }
 }

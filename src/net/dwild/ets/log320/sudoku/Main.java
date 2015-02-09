@@ -27,8 +27,8 @@ public class Main {
 
             SudokuSolver sudokuSolver = new SudokuSolver(sudoku);
             if(sudokuSolver.solve()) {
-                System.out.println(sudokuSolver.getSolvingTime());
                 System.out.println(sudokuSolver.getSolvedSudoku());
+                System.out.println(sudokuSolver.getSolvingTime());
             }
             else {
                 System.out.println("Sudoku impossible à résoudre.");

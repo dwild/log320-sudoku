@@ -61,14 +61,14 @@ public class Sudoku implements Cloneable {
             }
         }
 
-        ArrayList<Integer> possibilities = new ArrayList<Integer>(Arrays.asList(1,2,3,4,5,6,7,8,9));
+        boolean[] possibilities = new boolean[10];
 
         for(int i = 0; i < 9; i++) {
-            possibilities.remove((Integer) sudoku[y][i]);
+            possibilities[sudoku[y][i]] = true;
         }
 
         for(int i = 0; i < 9; i++) {
-            possibilities.remove((Integer) sudoku[i][x]);
+            possibilities[sudoku[i][x]] = true;
         }
 
         int caseX = x/3 * 3;
@@ -78,10 +78,18 @@ public class Sudoku implements Cloneable {
             int tempX = caseX + i%3;
             int tempY = caseY + i/3;
 
-            possibilities.remove((Integer) sudoku[tempY][tempX]);
+            possibilities[sudoku[tempY][tempX]] = true;
         }
 
-        return possibilities;
+        ArrayList<Integer> finalPossibilities = new ArrayList<Integer>();
+
+        for(int i = 1; i < 10; i++) {
+            if(!possibilities[i]) {
+                finalPossibilities.add(i);
+            }
+        }
+
+        return finalPossibilities;
     }
 
     public Sudoku clone() {

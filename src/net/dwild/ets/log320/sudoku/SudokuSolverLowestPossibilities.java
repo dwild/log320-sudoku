@@ -77,9 +77,9 @@ public class SudokuSolverLowestPossibilities {
     private boolean tryNextSolve() {
 
         int maxI = 0;
-        int maxPos = 0;
-        for(int x=0;x < 9; x++) {
-            for (int y = 0; y < 9; y++) {
+        int maxPos = -1;
+        for(int y=0;y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
                 if(solvedSudoku.getNumber(x, y) == 0 && possibilities[x][y] > maxPos) {
                     maxI = y*9 + x;
                     maxPos = possibilities[x][y];
@@ -87,7 +87,7 @@ public class SudokuSolverLowestPossibilities {
             }
         }
 
-        if(maxPos == 0) {
+        if(maxPos == -1) {
             return true;
         }
 

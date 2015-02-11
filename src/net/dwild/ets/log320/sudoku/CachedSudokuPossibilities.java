@@ -104,20 +104,19 @@ public class CachedSudokuPossibilities {
             numberPossibilities[x][y2]+= (oldNumber != 0 && oldBeforePossibilities !=  possibilities[x][y2][oldNumber]?1:0) + (newNumber != 0 && newBeforePossibilities !=  possibilities[x][y2][newNumber]?-1:0);
         }
 
-        int caseX = x/3 * 3;
-        int caseY = y/3 * 3;
+        final int caseX = x/3 * 3;
+        final int caseY = y/3 * 3;
 
-        for(int i = 0; i < 9; i++) {
-            int tempX = caseX + i%3;
-            int tempY = caseY + i/3;
+        for(int x2 = caseX; x2 < (caseX+3); x2++) {
+            for(int y2 = caseY; y2 < (caseY+3); y2++) {
+                boolean oldBeforePossibilities = possibilities[x2][y2][oldNumber];
+                boolean newBeforePossibilities = possibilities[x2][y2][newNumber];
 
-            boolean oldBeforePossibilities = possibilities[tempX][tempY][oldNumber];
-            boolean newBeforePossibilities = possibilities[tempX][tempY][newNumber];
+                possibilities[x2][y2][oldNumber] = false || columns[x2][oldNumber] || lines[y2][oldNumber];
+                possibilities[x2][y2][newNumber] = true;
 
-            possibilities[tempX][tempY][oldNumber] = false || columns[tempX][oldNumber] || lines[tempY][oldNumber];
-            possibilities[tempX][tempY][newNumber] = true;
-
-            numberPossibilities[tempX][tempY]+= (oldNumber != 0 && oldBeforePossibilities !=  possibilities[tempX][tempY][oldNumber]?1:0) + (newNumber != 0 && newBeforePossibilities !=  possibilities[tempX][tempY][newNumber]?-1:0);
+                numberPossibilities[x2][y2] += (oldNumber != 0 && oldBeforePossibilities != possibilities[x2][y2][oldNumber] ? 1 : 0) + (newNumber != 0 && newBeforePossibilities != possibilities[x2][y2][newNumber] ? -1 : 0);
+            }
         }
     }
 

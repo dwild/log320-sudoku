@@ -18,7 +18,7 @@ public class SudokuSolverRealLowestPossibilities {
 
         this.sudokuPossibilities = new CachedSudokuPossibilities(solvedSudoku);
 
-        boolean r = tryNextSolve();
+        boolean r = nextSolve();
 
         long endTime = System.nanoTime();
         solvingTime = endTime - startTime;
@@ -26,17 +26,14 @@ public class SudokuSolverRealLowestPossibilities {
         return r;
     }
 
-    private boolean trySolve(int i) {
-        int x = i%9;
-        int y = i/9;
-
+    private boolean trySolve(int x, int y) {
         int[] possibilities = sudokuPossibilities.getPossibilities(x, y);
         for(int j = 0; j < sudokuPossibilities.getNumberPossibilities(x, y); j++) {
             int number = possibilities[j];
 
             sudokuPossibilities.setNumber(x, y, number);
 
-            boolean solved = tryNextSolve();
+            boolean solved = nextSolve();
 
             if(solved) {
                 return true;
@@ -49,15 +46,17 @@ public class SudokuSolverRealLowestPossibilities {
         return false;
     }
 
-    private boolean tryNextSolve() {
-        int maxI = 0;
+    private boolean nextSolve() {
         int minPos = 10;
+        int minX = 0;
+        int minY = 0;
 
         for(int y=0;y < 9; y++) {
             for (int x = 0; x < 9; x++) {
                 if(sudokuPossibilities.getNumber(x, y) == 0 && sudokuPossibilities.getNumberPossibilities(x, y) < minPos) {
-                    maxI = y*9 + x;
                     minPos = sudokuPossibilities.getNumberPossibilities(x, y);
+                    minX = x;
+                    minY = y;
                 }
             }
         }
@@ -66,8 +65,7 @@ public class SudokuSolverRealLowestPossibilities {
             return true;
         }
 
-        boolean solved = trySolve(maxI);
-        return solved;
+        return trySolve(minX, minY);
     }
 
     public Sudoku getSudoku() {

@@ -6,6 +6,8 @@ public class SudokuSolver {
     private Sudoku solvedSudoku;
     private long solvingTime;
 
+    private CachedSudokuPossibilities sudokuPossibilities;
+
     public SudokuSolver(Sudoku sudoku) {
         this.sudoku = sudoku;
         this.solvedSudoku = sudoku.clone();
@@ -14,7 +16,9 @@ public class SudokuSolver {
     public boolean  solve() {
         long startTime = System.nanoTime();
 
-        boolean r = trySolve(0);
+        this.sudokuPossibilities = new CachedSudokuPossibilities(solvedSudoku);
+
+        boolean r = nextSolve();
 
         long endTime = System.nanoTime();
         solvingTime = endTime - startTime;
@@ -22,30 +26,46 @@ public class SudokuSolver {
         return r;
     }
 
-    private boolean trySolve(int i) {
-        if(i >= 81){
-            return true;
-        }
+    private boolean trySolve(int x, int y) {
+        int[] possibilities = sudokuPossibilities.getPossibilities(x, y);
+        for(int j = 0; j < sudokuPossibilities.getNumberPossibilities(x, y); j++) {
+            int number = possibilities[j];
 
-        int x = i%9;
-        int y = i/9;
+            sudokuPossibilities.setNumber(x, y, number);
 
-        if(sudoku.getNumber(x,y) > 0) return trySolve(i+1);
-
-        for(int n:solvedSudoku.getPossibilities(x, y)) {
-            solvedSudoku.setNumber(x, y, n);
-
-            boolean solved = trySolve(i+1);
+            boolean solved = nextSolve();
 
             if(solved) {
                 return true;
             }
             else {
-                solvedSudoku.setNumber(x, y, 0);
+                sudokuPossibilities.setNumber(x, y, 0);
             }
         }
 
         return false;
+    }
+
+    private boolean nextSolve() {
+        int minPos = 10;
+        int minX = 0;
+        int minY = 0;
+
+        for(int y=0;y < 9; y++) {
+            for (int x = 0; x < 9; x++) {
+                if(sudokuPossibilities.getNumber(x, y) == 0 && sudokuPossibilities.getNumberPossibilities(x, y) < minPos) {
+                    minPos = sudokuPossibilities.getNumberPossibilities(x, y);
+                    minX = x;
+                    minY = y;
+                }
+            }
+        }
+
+        if(minPos == 10) {
+            return true;
+        }
+
+        return trySolve(minX, minY);
     }
 
     public Sudoku getSudoku() {

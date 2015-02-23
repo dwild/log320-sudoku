@@ -25,7 +25,7 @@ public class Main {
 
             Sudoku sudoku = sudokuReader.readSudoku();
 
-            SudokuSolverRealLowestPossibilities sudokuSolver = new SudokuSolverRealLowestPossibilities(sudoku);
+            SudokuSolver sudokuSolver = new SudokuSolver(sudoku);
             if(sudokuSolver.solve()) {
                 System.out.println(sudokuSolver.getSolvedSudoku());
                 System.out.println(sudokuSolver.getSolvingTime());
